@@ -1,0 +1,53 @@
+
+Directory contents:
+
+* sdss-collab: password-protected data private to the SDSS collabroation.
+
+* sdss-dr10d-fields.fits: a table of SDSS fields for which forced photometry exists.
+
+* sdss-dr10d-tiles.fits: a table of WISE coadd tiles for which forced photometry exists.
+
+* specmatch-dr10.fits: SDSS DR10 spectra matched to our WISE photomtery.
+    This is the "specObj-dr10.fits" file augmented with our photometry for
+    matching rows.
+      http://data.sdss3.org/datamodel/files/SPECTRO_REDUX/specObj.html
+
+* sdss-dr10d-pobj: our WISE photometry results, in files that are row-by-row parallel to the SDSS DR10 "photoObj" files,
+      http://data.sdss3.org/datamodel/files/BOSS_PHOTOOBJ/RERUN/RUN/CAMCOL/photoObj.html
+    The directory structure is the same too;
+      %(run)i/%(camcol)i/photoWiseForced-%(run)06i-%(camcol)i-%(field)04i.fits
+
+* sdss-dr10d-pobj-tgz: tarballs, one per run, of the above.
+
+* sdss-dr10d-phot: our WISE photometry results, in files corresponding to WISE coadd tiles.
+    These include SDSS sources within the tile, plus a margin.  The same SDSS object may appear in multiple tiles.
+    The filename is based on the WISE tile name, which encodes an approximate RA,Dec center;
+      phot-RRRR[pm]DDD.fits
+    is the tile centered at roughly RRR.R degrees RA, DD.D degrees Dec.
+
+* sdss-dr10d-SEDs: "I just want RA,Dec, and the SDSS and WISE SEDs."  Reasonable enough request!
+  These tables (one per SDSS run+camcol) contain:
+   1 ra               D
+   2 dec              D
+   3 pointsource      L
+   4 w1_nanomaggies   E
+   5 w1_nanomaggies_ivar E
+   6 w2_nanomaggies   E
+   7 w2_nanomaggies_ivar E
+   8 w3_nanomaggies   E
+   9 w3_nanomaggies_ivar E
+  10 w4_nanomaggies   E
+  11 w4_nanomaggies_ivar E
+  12 sdss_flux        5E
+  13 sdss_flux_ivar   5E
+  where "pointsource" = SDSS point source or treated_as_pointsource,
+        "sdss_flux" = SDSS PSF flux for "pointsource" objects, "cmodelflux" otherwise.
+
+* md5sums-dr10d-pobj: checksums for the sdss-dr10d-pobj directory.
+   Pro tip: you could edit this file to produce a "wget" script, if you
+   were so inclined.
+
+* md5sums-dr10d-phot: checksums for the sdss-dr10d-phot directory.
+
+See Appendix A of our paper for the catalog contents;
+  http://arxiv.org/abs/1410.7397

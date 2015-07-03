@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}
+unWISE coadds: data access
+{% endblock %}
+
+{% block css %}
+.formtab {
+font-size: 14px;
+background: #fff;
+margin: 15px;
+width: 480px;
+border-collapse: collapse;
+text-align: left;
+}
+.formtab td
+{
+color: #669;
+padding: 9px 8px 0px 8px;
+}
+.formtab tbody tr:hover td
+{
+color: #009;
+}
+.notebox {
+text-align:left;
+width: 60%;
+}
+{% endblock %}
+
+{% block content %}
+<center>
+<h2>unWISE coadds: pick your access method</h2>
+
+<hr>
+
+<div class="notebox">
+Note: this form allows only the simplest kind of single RA,Dec search
+and returns full tiles.  Adding the ability to do postage-stamp
+cutouts for a list of sources is a to-do item.  Please feel free to <a
+href="mailto:query@unwise.me">email us at query@unwise.me</a> with any
+questions or problems you encounter.  Thanks!
+</div>
+
+<hr>
+
+<h3>Cone Search for Tiles:</h3>
+<form action="{{ url }}">
+  {{ form.non_field_errors }}
+  <table class="formtab">
+    <tbody>
+    <tr>
+      <td align="right"><label for="id_coord">Coordinates:</label></td>
+      <td>
+        {{ form.coord }}
+        {{ form.coord.errors }}
+      </td>
+    </tr>
+    <tr>
+      <td  align="right"><label for="id_radius">Radius (deg):</label></td>
+      <td>
+        {{ form.radius }}
+        {{ form.radius.errors }}
+      </td>
+    </tr>
+    <tr><td colspan="2" align="center">
+        <input type="submit" value="Search" class="bigbutton" />
+    </td></tr>
+    </tbody>
+  </table>
+  example: "45 17" (decimal degrees), "12:57:10.4 -43:65:10" (hh:mm:ss dd:mm:ss).<br/><br/>
+  radius is <i>in addition</i> to the tile size, so to find the tile containing your coordinate, set the radius to zero.
+  <br/><br/>
+  The unWISE coadds are on the same tile centers as the WISE Atlas Images.
+  <br/>They are about 1.6 degrees wide (2048 pixels at 2.75" for unWISE).
+</td></tr>
+</form>
+
+<hr>
+
+<h3>Get a Cutout:</h3>
+<form action="{% url 'cutout_fits' %}">
+  {{ cutoutform.non_field_errors }}
+  <table class="formtab">
+    <tbody>
+    <tr>
+      <td align="right"><label for="id_ra">RA:</label></td>
+      <td>
+        {{ cutoutform.ra }}
+        {{ cutoutform.ra.errors }}
+      </td>
+    </tr>
+    <tr>
+      <td align="right"><label for="id_dec">Dec:</label></td>
+      <td>
+        {{ cutoutform.dec }}
+        {{ cutoutform.dec.errors }}
+      </td>
+    </tr>
+    <tr>
+      <td align="right"><label for="id_size">Size in pixels:</label></td>
+      <td>
+        {{ cutoutform.size }}
+        {{ cutoutform.size.errors }}
+      </td>
+    </tr>
+    <tr>
+      <td align="right"><label for="id_bands">Bands (1,2,3,4):</label></td>
+      <td>
+        {{ cutoutform.bands }}
+        {{ cutoutform.bands.errors }}
+      </td>
+    </tr>
+    <tr><td colspan="2" align="center">
+        <input type="submit" value="Get Cutouts" class="bigbutton" />
+    </td></tr>
+    </tbody>
+  </table>
+  Returns a .tar.gz file of FITS cutouts.<br/><br/>
+  Maximum cutout size is 256 pixels.<br/><br/>
+  Note that you can script this up pretty easily: just request a URL like:<br/>
+  <a href="{% url 'cutout_fits' %}?ra=41&dec=10&size=100&bands=12">http://unwise.me{% url 'cutout_fits' %}?ra=41&dec=10&size=100&bands=12</a>
+
+</td></tr>
+</form>
+
+<hr>
+
+<div class="notebox">
+<h3>Do it yourself:</h3>
+<p>
+<a href="/data/tiles.fits">FITS table of available tiles</a>
+and
+<a href="/data/">Direct file access</a>
+</p>
+
+<p>
+Example: to download all images covering SDSS Stripe 82:
+<div align="left">
+<pre>
+wget http://unwise.me/data/tiles.fits
+fitscopy tiles.fits"[dec>-1.6 && dec<1.6]" stripe82-tiles.fits
+tablist stripe82-tiles.fits"[col coadd_id]" | tail +3 | awk '{print $2}' \
+  | awk '{printf "wget -r -nH --cut-dirs=1 -c http://unwise.me/data/%s/%s/unwise-%s-w1-img-m.fits\n", substr($1,0,3),$1,$1}' \
+  > download.sh
+chmod 755 download.sh
+./download.sh
+</pre>
+</div>
+</p>
+</div>
+
+<hr>
+
+</center>
+{% endblock %}
