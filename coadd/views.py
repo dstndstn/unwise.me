@@ -13,6 +13,19 @@ from coadd.models import *
 from astrometry.util.fits import *
 from astrometry.util.starutil_numpy import *
 
+coadd_version_choices = [
+    ('allwise', 'AllWISE'),
+    ('neo1', 'NeoWISE-R 1'),
+    ]
+coadd_version_default = 'neo1'
+
+class CoaddForm(forms.Form):
+    version = forms.ChoiceField(required=False, initial=coadd_version_default,
+                                choices=coadd_version_choices)
+
+class CoaddCoordSearchForm(CoordSearchForm, CoaddForm):
+    pass
+
 class CutoutSearchForm(forms.Form):
     ra  = forms.FloatField(required=False, validators=[parse_ra])
     dec = forms.FloatField(required=False, validators=[parse_dec])
@@ -76,6 +89,8 @@ class CoordSearchTileList(TileList):
         context['ra'] = args.pop('ra', [0])[0]
         context['dec'] = args.pop('dec', [0])[0]
         context['radius'] = args.pop('radius', [0])[0]
+        # ??
+        context['version'] = args.pop('version', ['1'])[0]
         return context
 
 def tileset_tgz(req):
@@ -164,7 +179,7 @@ def tile_tgz(req, coadd=None, bands=None):
 
 def coord_search(req):
     if 'coord' in req.GET:
-        form = CoordSearchForm(req.GET)
+        form = CoaddCoordSearchForm(req.GET)
 
         tracking = UserCoordSearch(product=PRODUCT_COADD,
                                    ip=req.META['REMOTE_ADDR'],
@@ -193,7 +208,7 @@ def coord_search(req):
             tracking.save()
 
     else:
-        form = CoordSearchForm()
+        form = CoaddCoordSearchForm()
 
     cutoutform = CutoutSearchForm()
 

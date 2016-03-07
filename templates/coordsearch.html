@@ -50,6 +50,13 @@ questions or problems you encounter.  Thanks!
   <table class="formtab">
     <tbody>
     <tr>
+      <td align="right"><label for="id_version">Version:</label></td>
+      <td>
+        {{ form.version }}
+        {{ form.version.errors }}
+      </td>
+    </tr>
+    <tr>
       <td align="right"><label for="id_coord">Coordinates:</label></td>
       <td>
         {{ form.coord }}
