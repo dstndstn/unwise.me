@@ -193,7 +193,8 @@ def coord_search(req):
                 radius = float(form.cleaned_data['radius'])
             except:
                 radius = 0.
-
+            version = form.cleaned_data['version']
+                
             tracking.ra = ra
             tracking.dec = dec
             tracking.radius = radius
@@ -202,7 +203,7 @@ def coord_search(req):
             if dotrack:
                 tracking.save()
 
-            return HttpResponseRedirect('tiles_near/?ra=%g&dec=%g&radius=%g' % (ra, dec, radius))
+            return HttpResponseRedirect('tiles_near/?version=%s&ra=%g&dec=%g&radius=%g' % (version, ra, dec, radius))
 
         if dotrack:
             tracking.save()
