@@ -91,6 +91,13 @@ questions or problems you encounter.  Thanks!
   <table class="formtab">
     <tbody>
     <tr>
+      <td align="right"><label for="id_version">Version:</label></td>
+      <td>
+        {{ cutoutform.version }}
+        {{ cutoutform.version.errors }}
+      </td>
+    </tr>
+    <tr>
       <td align="right"><label for="id_ra">RA:</label></td>
       <td>
         {{ cutoutform.ra }}
@@ -126,7 +133,7 @@ questions or problems you encounter.  Thanks!
   Returns a .tar.gz file of FITS cutouts.<br/><br/>
   Maximum cutout size is 256 pixels.<br/><br/>
   Note that you can script this up pretty easily: just request a URL like:<br/>
-  <a href="{% url 'cutout_fits' %}?ra=41&dec=10&size=100&bands=12">http://unwise.me{% url 'cutout_fits' %}?ra=41&dec=10&size=100&bands=12</a>
+  <a href="{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12">http://unwise.me{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12</a>
 
 </td></tr>
 </form>

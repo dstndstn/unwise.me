@@ -80,7 +80,6 @@ def parse_coord(txt):
     return ra,dec
 
 class CoordSearchForm(forms.Form):
-    version = forms.CharField(max_length=20)
     coord = forms.CharField(required=True, validators=[parse_coord],
                             initial='41 10')
     radius = forms.FloatField(required=False, initial=0)

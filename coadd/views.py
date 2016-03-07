@@ -26,7 +26,7 @@ class CoaddForm(forms.Form):
 class CoaddCoordSearchForm(CoordSearchForm, CoaddForm):
     pass
 
-class CutoutSearchForm(forms.Form):
+class CutoutSearchForm(CoaddForm):
     ra  = forms.FloatField(required=False, validators=[parse_ra])
     dec = forms.FloatField(required=False, validators=[parse_dec])
     size = forms.IntegerField(required=False, initial=100,
@@ -242,6 +242,8 @@ def cutout_fits(req):
     bandstr = form.cleaned_data['bands']
     bands = [int(c) for c in bandstr]
     bands = [b for b in bands if b in [1,2,3,4]]
+
+    version = form.cleaned_data['version']
     
     radius = size/2. * 2.75/3600.
     tiles = unwise_tiles_near_radec(ra, dec, radius)
@@ -253,7 +255,7 @@ def cutout_fits(req):
     
     for tile in tiles:
         coadd = tile.coadd
-        dirnm = os.path.join(settings.DATA_DIR, coadd[:3], coadd)
+        dirnm = os.path.join(settings.DATA_DIR, version, coadd[:3], coadd)
         base = os.path.join(dirnm, 'unwise-%s' % coadd)
         w1fn = str(base + '-w1-img-m.fits')
         wcs = Tan(w1fn, 0)
@@ -318,6 +320,7 @@ def cutout_jpg(req):
     # bandstr = form.cleaned_data['bands']
     # bands = [int(c) for c in bandstr]
     # bands = [b for b in bands if b in [1,2,3,4]]
+    version = form.cleaned_data['version']
     
     radius = size/2. * 2.75/3600.
     tiles = unwise_tiles_near_radec(ra, dec, radius)
@@ -334,7 +337,7 @@ def cutout_jpg(req):
     
     for tile in tiles:
         coadd = tile.coadd
-        dirnm = os.path.join(settings.DATA_DIR, coadd[:3], coadd)
+        dirnm = os.path.join(settings.DATA_DIR, version, coadd[:3], coadd)
         base = os.path.join(dirnm, 'unwise-%s' % coadd)
 
         subwcs = None
