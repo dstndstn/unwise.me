@@ -126,6 +126,8 @@ def tileset_tgz(req):
         if 'w%i' % band in req.POST:
             bands.append(band)
 
+    version = req.POST['version']
+            
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products=' '.join(prods),
                             tiles=' '.join([t.coadd for t in tiles]),
@@ -143,7 +145,7 @@ def tileset_tgz(req):
     files = []
     for tile in tiles:
         coadd = tile.coadd
-        dirnm = str(os.path.join(coadd[:3], coadd))
+        dirnm = str(os.path.join(version, coadd[:3], coadd))
         for band in bands:
             for pat in pats:
                 files.append(str(os.path.join(dirnm, 'unwise-%s-w%i-%s' % (coadd, band, pat))))

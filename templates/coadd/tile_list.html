@@ -81,6 +81,7 @@ and the checkboxes below to select the bands and products to download for each t
 {% endif %}
 
 <form action="{% url 'tileset-tgz' %}" method="post">{% csrf_token %}
+<input type="hidden" name="version" value="{{version}}"/>
 <table id="tiletab">
   <thead>
     <tr>
