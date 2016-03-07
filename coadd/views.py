@@ -244,7 +244,10 @@ def cutout_fits(req):
     bands = [b for b in bands if b in [1,2,3,4]]
 
     version = form.cleaned_data['version']
-    
+
+    if version == 'neo1':
+        bands = [b for b in bands if b in [1,2]]
+
     radius = size/2. * 2.75/3600.
     tiles = unwise_tiles_near_radec(ra, dec, radius)
     tiles = list(tiles)
