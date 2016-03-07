@@ -381,7 +381,8 @@ def _common_search_results(req, form, fields_fits_table=False,
                 continue
             #
             if cone is not None:
-                I = np.atleast_1d(degrees_between(ra, dec, tt.ra, tt.dec) <= rad)
+                dists = degrees_between(ra, dec, tt.ra, tt.dec)
+                I = np.atleast_1d(dists <= rad)
             else:
                 I = ((tt.ra  >= ralo ) * (tt.ra  <= rahi) *
                      (tt.dec >= declo) * (tt.dec <= dechi))
@@ -389,6 +390,8 @@ def _common_search_results(req, form, fields_fits_table=False,
             tt.cut(I)
             if len(tt) == 0:
                 continue
+            if cone is not None:
+                tt.match_dist = dists[I]
             n = len(tt)
             tt.run = np.empty(n, np.int16)
             tt.run[:] = run
@@ -400,6 +403,8 @@ def _common_search_results(req, form, fields_fits_table=False,
         if len(TT) == 0:
             return HttpResponseBadRequest('No objects match your query.')
         T = merge_tables(TT)
+        if cone is not None:
+            T.cut(np.argsort(T.match_dist))
         del TT
         #print 'Total of', len(T), 'sources'
         #print 'has_wise_phot:', np.unique(T.has_wise_phot)
