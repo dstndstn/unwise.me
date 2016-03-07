@@ -90,9 +90,13 @@ and the checkboxes below to select the bands and products to download for each t
       </th><th>Coadd Tile</th><th>RA (deg)</th><th>Dec (deg)</th>
       <th>W1 data</th>
       <th>W2 data</th>
+      {% if version == 'allwise' %}
       <th>W3 data</th>
       <th>W4 data</th>
       <th>W1-4 data</th>
+      {% else %}
+      <th>W1-2 data</th>
+      {% endif %}
       <th>AllWISE</th>
     </tr>
   </thead>
@@ -104,11 +108,16 @@ and the checkboxes below to select the bands and products to download for each t
     <td><a href="/data/{{ version }}/{{tile.coadd|slice:":3"}}/{{tile.coadd}}/">{{ tile.coadd }}</a></td>
     <td>{{ tile.ra|floatformat:3 }}</td>
     <td>{{ tile.dec|floatformat:3 }}</td>
-    <td><a href="{% url 'tile-tgz' coadd=tile.coadd bands=1 %}">w1.tgz</a></td>
-    <td><a href="{% url 'tile-tgz' coadd=tile.coadd bands=2 %}">w2.tgz</a></td>
-    <td><a href="{% url 'tile-tgz' coadd=tile.coadd bands=3 %}">w3.tgz</a></td>
-    <td><a href="{% url 'tile-tgz' coadd=tile.coadd bands=4 %}">w4.tgz</a></td>
-    <td><a href="{% url 'tile-tgz' coadd=tile.coadd %}">w1234.tgz</a></td>
+    <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd bands=1 %}">w1.tgz</a></td>
+    <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd bands=2 %}">w2.tgz</a></td>
+    {% if version == 'allwise' %}
+    <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd bands=3 %}">w3.tgz</a></td>
+    <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd bands=4 %}">w4.tgz</a></td>
+    <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd %}">w1234.tgz</a></td>
+    {% else %}
+    <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd bands=12 %}">w12.tgz</a></td>
+    {% endif %}
+
     <td><a href="http://irsa.ipac.caltech.edu/ibe/data/wise/merge/merge_p3am_cdd/{{tile.coadd|slice:":2"}}/{{tile.coadd|slice:":4"}}/{{tile.coadd}}_ac51/">AllWISE</a></td>
   </tr>
   {% endfor %}
@@ -124,8 +133,10 @@ Bands to include:
 <div id="bandbox">
 <input type="checkbox" name="w1" checked> W1&nbsp;<br/>
 <input type="checkbox" name="w2" checked> W2&nbsp;<br/>
+{% if version == 'allwise' %}
 <input type="checkbox" name="w3" checked> W3&nbsp;<br/>
 <input type="checkbox" name="w4" checked> W4<br/>
+{% endif %}
 </div>
 <br />
 Files to include:

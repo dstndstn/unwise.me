@@ -8,10 +8,10 @@ tilepattern = r'[0-9]{4}[pm][0-9]{3}'
 urlpatterns = patterns('coadd.views',
     url(r'^tiles/$', TileList.as_view()),
     url(r'^tiles_near/$', CoordSearchTileList.as_view()),
-    url(r'^tiledata/(?P<coadd>' + tilepattern +
+    url(r'^tiledata/(?P<version>(neo1|allwise))/(?P<coadd>' + tilepattern +
         ')-w(?P<bands>1?2?3?4?).tgz/?$',
         'tile_tgz', name='tile-tgz'),
-    url(r'^tiledata/(?P<coadd>' + tilepattern + ').tgz/?$',
+    url(r'^tiledata/(?P<version>(neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
         'tile_tgz', name='tile-tgz'),
     url(r'^tilesetdata/?$', 'tileset_tgz', name='tileset-tgz'),
     url(r'^imgsearch/?$', 'coord_search', name='search'),

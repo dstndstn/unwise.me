@@ -150,7 +150,7 @@ def tileset_tgz(req):
     # print 'Files:', files
     return tar_files(req, files, 'unwise.tgz')
 
-def tile_tgz(req, coadd=None, bands=None):
+def tile_tgz(req, coadd=None, bands=None, version=None):
     tile = get_object_or_404(Tile, coadd=coadd)
     if bands is None:
         bands = [1,2,3,4]
@@ -159,6 +159,9 @@ def tile_tgz(req, coadd=None, bands=None):
         bands = [int(c,10) for c in bands]
         fn = '%s-w%s.tgz' % (tile.coadd, ''.join(['%i'%b for b in bands]))
 
+    if version is None:
+        version = coadd_version_default
+        
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products='all',
                             tiles=tile.coadd,
@@ -171,7 +174,7 @@ def tile_tgz(req, coadd=None, bands=None):
 
     files = []
     coadd = tile.coadd
-    dirnm = os.path.join(coadd[:3], coadd)
+    dirnm = os.path.join(version, coadd[:3], coadd)
     base = os.path.join(dirnm, 'unwise-%s' % coadd)
     for band in bands:
         files.append(str(base + '-w%i-*' % (band)))
