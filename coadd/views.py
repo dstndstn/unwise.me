@@ -34,6 +34,12 @@ class CutoutSearchForm(CoaddForm):
     bands = forms.CharField(required=False, initial='1234',
                             widget=forms.TextInput(attrs={'size': 6}))
 
+    file_img_m    = forms.BooleanField(required=False)
+    file_invvar_m = forms.BooleanField(required=False)
+    file_n_m      = forms.BooleanField(required=False)
+    file_std_m    = forms.BooleanField(required=False)
+
+    
 class TileList(ListView):
     template_name = 'coadd/tile_list.html'
     paginate_by = 20
@@ -260,6 +266,11 @@ def cutout_fits(req):
     # Create a temp dir in which to place cutouts
     tempdir = tempfile.mkdtemp()
     fns = []
+
+    filetypes = []
+    for t in ['img_m', 'invvar_m', 'n_m', 'std_m']:
+        if form.cleaned_data['file_' + t]:
+            filetypes.append(t)
     
     for tile in tiles:
         coadd = tile.coadd
@@ -288,11 +299,11 @@ def cutout_fits(req):
         subwcs.add_to_header(hdr)
 
         for band in bands:
-            for pat in ['-w%i-img-m.fits',
-                        '-w%i-invvar-m.fits.gz',
-                        '-w%i-n-m.fits.gz',
-                        '-w%i-std-m.fits.gz',
-                        ]:
+            for ft in filetypes:
+                pat = { 'img_m':    '-w%i-img-m.fits',
+                        'invvar_m': '-w%i-invvar-m.fits.gz',
+                        'n_m':      '-w%i-n-m.fits.gz',
+                        'std_m':    '-w%i-std-m.fits.gz' }[ft]
                 fn = str(base + pat % band)
                 img = fitsio.FITS(fn)[0][y0:y1, x0:x1]
                 basefn = os.path.basename(fn)

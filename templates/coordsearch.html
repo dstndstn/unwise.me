@@ -36,10 +36,11 @@ width: 60%;
 
 <div class="notebox">
 Note: this form allows only the simplest kind of single RA,Dec search
-and returns full tiles.  Adding the ability to do postage-stamp
-cutouts for a list of sources is a to-do item.  Please feel free to <a
-href="mailto:query@unwise.me">email us at query@unwise.me</a> with any
-questions or problems you encounter.  Thanks!
+and returns full tiles.  For postage stamps, see below.  Adding the
+ability to do postage-stamp cutouts for a list of sources is a to-do
+item.  Please feel free to <a href="mailto:query@unwise.me">email us
+at query@unwise.me</a> with any questions or problems you encounter.
+Thanks!
 </div>
 
 <hr>
@@ -75,11 +76,13 @@ questions or problems you encounter.  Thanks!
     </td></tr>
     </tbody>
   </table>
-  example: "45 17" (decimal degrees), "12:57:10.4 -43:65:10" (hh:mm:ss dd:mm:ss).<br/><br/>
+  Coordinates example: "45 17" (decimal degrees), "12:57:10.4 -43:65:10" (hh:mm:ss dd:mm:ss).<br/><br/>
   radius is <i>in addition</i> to the tile size, so to find the tile containing your coordinate, set the radius to zero.
   <br/><br/>
   The unWISE coadds are on the same tile centers as the WISE Atlas Images.
   <br/>They are about 1.6 degrees wide (2048 pixels at 2.75" for unWISE).
+  <br/><br/>
+  The "NeoWISE-R1" version is described in <a href="https://arxiv.org/abs/1603.05664">Meisner et al 2016, arXiv:1603.05664</a>, and includes data from the original WISE mission as well as the NeoWISE-Reactivation Year 1 data.  It also has better artifact removal than the "AllWISE" version.  The "AllWISE" version is described in <a href="http://arxiv.org/abs/1405.0308">Lang 2014, arXiv:1405.0308</a>, and includes data from the original WISE mission.
 </td></tr>
 </form>
 
@@ -123,6 +126,15 @@ questions or problems you encounter.  Thanks!
       <td>
         {{ cutoutform.bands }}
         {{ cutoutform.bands.errors }}
+      </td>
+    </tr>
+    <tr>
+      <td align="right">File types included:</td>
+      <td>
+        {{ cutoutform.file_img_m }} Image <br />
+        {{ cutoutform.file_invvar_m }} Inverse-variance<br />
+        {{ cutoutform.file_n_m }} Number of exposures in coadd<br />
+        {{ cutoutform.file_std_m }} Standard deviation of exposures <br />
       </td>
     </tr>
     <tr><td colspan="2" align="center">
