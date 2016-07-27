@@ -129,10 +129,10 @@ Thanks!
       </td>
     </tr>
     <tr>
-      <td align="right">File types included:</td>
+      <td align="right">File types included:<br /></td>
       <td>
         {{ cutoutform.file_img_m }} Image <br />
-        {{ cutoutform.file_invvar_m }} Inverse-variance<br />
+        {{ cutoutform.file_invvar_m }} Inverse-variance of image<br />
         {{ cutoutform.file_n_m }} Number of exposures in coadd<br />
         {{ cutoutform.file_std_m }} Standard deviation of exposures <br />
       </td>
@@ -142,11 +142,12 @@ Thanks!
     </td></tr>
     </tbody>
   </table>
-  Returns a .tar.gz file of FITS cutouts.<br/><br/>
+  Returns a .tar.gz file of FITS cutouts, for all tiles overlapping the given RA,Dec<br/><br/>
   Maximum cutout size is 256 pixels.<br/><br/>
   Note that you can script this up pretty easily: just request a URL like:<br/>
-  <a href="{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12">http://unwise.me{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12</a>
-
+  <a href="{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12">http://unwise.me{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12</a><br />
+  <tt>version</tt> takes value <tt>neo1</tt> or <tt>allwise</tt>.<br/>
+  To select a subset of the file types, add <tt>&file_img_m=on</tt>, <tt>&file_invvar_m=on</tt>, <tt>&file_n_m=on</tt>, or <tt>&file_std_m=on</tt> to the URL.
 </td></tr>
 </form>
 

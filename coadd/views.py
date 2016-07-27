@@ -34,10 +34,10 @@ class CutoutSearchForm(CoaddForm):
     bands = forms.CharField(required=False, initial='1234',
                             widget=forms.TextInput(attrs={'size': 6}))
 
-    file_img_m    = forms.BooleanField(required=False)
-    file_invvar_m = forms.BooleanField(required=False)
-    file_n_m      = forms.BooleanField(required=False)
-    file_std_m    = forms.BooleanField(required=False)
+    file_img_m    = forms.BooleanField(required=False, initial=True)
+    file_invvar_m = forms.BooleanField(required=False, initial=True)
+    file_n_m      = forms.BooleanField(required=False, initial=True)
+    file_std_m    = forms.BooleanField(required=False, initial=True)
 
     
 class TileList(ListView):
@@ -268,9 +268,13 @@ def cutout_fits(req):
     fns = []
 
     filetypes = []
-    for t in ['img_m', 'invvar_m', 'n_m', 'std_m']:
+    types = ['img_m', 'invvar_m', 'n_m', 'std_m']
+    for t in types:
         if form.cleaned_data['file_' + t]:
             filetypes.append(t)
+    # If none specified, include all filetypes.
+    if len(filetypes) == 0:
+        filetypes = types
     
     for tile in tiles:
         coadd = tile.coadd
