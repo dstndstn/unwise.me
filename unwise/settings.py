@@ -30,9 +30,16 @@ SECRET_KEY = 'pt2xc@+_+7g-pcf!4#6%z2383w-vcare05aj3-vv5hunuoq6x3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+#TEMPLATE_DEBUG = True
+#TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        #'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+    },
+]
 
 ALLOWED_HOSTS = []
 

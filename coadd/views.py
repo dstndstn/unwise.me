@@ -45,7 +45,8 @@ class TileList(ListView):
     paginate_by = 20
     model = Tile
 
-dotrack = True
+#dotrack = True
+dotrack = False
 
 class CoordSearchTileList(TileList):
     def get_queryset(self):
@@ -227,7 +228,7 @@ def coord_search(req):
     return render(req, 'coordsearch.html', {
         'form': form,
         'cutoutform': cutoutform,
-        'url': reverse('coadd.views.coord_search'),
+        'url': reverse('search'),
     })    
 
 def index(req):

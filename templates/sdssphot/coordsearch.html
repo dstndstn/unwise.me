@@ -87,13 +87,13 @@ Thanks!
       <td>
         {{ form.version }}
         {{ form.version.errors }}
-      {% comment %}
+ {% comment %}
         <select id="id_version" name="version">
           {% for val,string in version_choices %}
           <option value="{{val}}">{{string}}</option>
           {% endfor %}
-     </select>
-    {% endcomment %}
+        </select>
+ {% endcomment %}
       </td>
     </tr>
 
@@ -107,7 +107,7 @@ Thanks!
     <tr>
       <td  align="right"><label for="id_datatype">Data type:</label></td>
       <td>
-        {% comment %}
+    {% comment %}
         <select id="id_datatype" name="datatype">
           {% for val,string in datatype_choices %}
           <option value="{{val}}">{{string}}</option>

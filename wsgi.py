@@ -12,14 +12,14 @@ import site
 import sys
 
 rootpath=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-unwisepath=os.path.join(rootpath, 'unwise-web')
+unwisepath=os.path.join(rootpath, 'unwise.me')
 
 # This will make Django run in a virtual env
 # Remember original sys.path.
 prev_sys_path = list(sys.path)
 
 # Add each new site-packages directory.
-site.addsitedir(os.path.join(rootpath, 'lib', 'python2.6', 'site-packages'))
+site.addsitedir(os.path.join(rootpath, 'lib', 'python2.7', 'site-packages'))
 
 # Reorder sys.path so new directories at the front.
 new_sys_path = []

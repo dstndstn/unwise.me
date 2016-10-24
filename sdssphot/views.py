@@ -18,8 +18,8 @@ from astrometry.libkd.spherematch import *
 
 from unwise import settings
 
-dotrack = True
-#dotrack = False
+#dotrack = True
+dotrack = False
 
 version_choices = [
     ('sdss-dr10d', 'SDSS DR10'),
@@ -628,7 +628,7 @@ def coord_search(req):
         'boxform': boxform,
         'version_choices': version_choices,
         'datatype_choices': datatype_choices,
-        'url': reverse('sdssphot.views.coord_search'),
+        'url': reverse('phot-search'),
         'dataurl': settings.SDSSPHOT_DATA_URL,
     })    
 
