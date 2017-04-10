@@ -16,8 +16,9 @@ from astrometry.util.starutil_numpy import *
 coadd_version_choices = [
     ('allwise', 'AllWISE'),
     ('neo1', 'NeoWISE-R 1'),
+    ('neo2', 'NeoWISE-R 2'),
     ]
-coadd_version_default = 'neo1'
+coadd_version_default = 'neo2'
 
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,
