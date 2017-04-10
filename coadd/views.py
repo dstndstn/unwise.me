@@ -258,7 +258,7 @@ def cutout_fits(req):
 
     version = form.cleaned_data['version']
 
-    if version == 'neo1':
+    if version in ['neo1', 'neo2']:
         bands = [b for b in bands if b in [1,2]]
 
     radius = size/2. * 2.75/3600.
