@@ -13,6 +13,9 @@ from coadd.models import *
 from astrometry.util.fits import *
 from astrometry.util.starutil_numpy import *
 
+def tr_neo2(req):
+    return HttpResponseRedirect('https://faun.rc.fas.harvard.edu/ameisner/unwise/tr_neo2')
+
 coadd_version_choices = [
     ('allwise', 'AllWISE'),
     ('neo1', 'NeoWISE-R 1'),
