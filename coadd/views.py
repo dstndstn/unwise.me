@@ -19,13 +19,18 @@ def fulldepth_neo3(req):
 def tr_neo2(req):
     return HttpResponseRedirect('https://faun.rc.fas.harvard.edu/ameisner/unwise/tr_neo2')
 
+# When adding a new dataset:
+# - add to the list below
+# - see unwise/urls.py and add to the URL patterns.
+# - weirdly, create a symlink in data/allwise/ pointing to the new directory
 
 coadd_version_choices = [
     ('allwise', 'AllWISE'),
     ('neo1', 'NeoWISE-R 1'),
     ('neo2', 'NeoWISE-R 2'),
+    ('neo3', 'NeoWISE-R 3'),
     ]
-coadd_version_default = 'neo2'
+coadd_version_default = 'neo3'
 
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,

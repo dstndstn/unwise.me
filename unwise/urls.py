@@ -10,10 +10,10 @@ urlpatterns = [
     url(r'^tr_neo2/?$', co.tr_neo2),
     url(r'^tiles/$', co.TileList.as_view()),
     url(r'^tiles_near/$', co.CoordSearchTileList.as_view()),
-    url(r'^tiledata/(?P<version>(neo2|neo1|allwise))/(?P<coadd>' + tilepattern +
+    url(r'^tiledata/(?P<version>(neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern +
         ')-w(?P<bands>1?2?3?4?).tgz/?$',
         co.tile_tgz, name='tile-tgz'),
-    url(r'^tiledata/(?P<version>(neo2|neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
+    url(r'^tiledata/(?P<version>(neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
         co.tile_tgz, name='tile-tgz'),
     url(r'^tilesetdata/?$', co.tileset_tgz, name='tileset-tgz'),
     url(r'^imgsearch/?$', co.coord_search, name='search'),
