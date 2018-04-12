@@ -23,14 +23,13 @@ dotrack = False
 
 version_choices = [
     ('sdss-dr10d', 'SDSS DR10'),
-    ('sdss-dr13',  'SDSS DR13 (requires SDSS password)'),
-    ('eboss',      'eBOSS targeting (requires SDSS password)'),
+    ('sdss-dr13',  'SDSS DR13'),
+    ('eboss',      'eBOSS targeting'),
     #('sequels',    'SEQUELS targeting (requires SDSS password)'),
     ]
-version_default = 'sdss-dr10d'
+version_default = 'sdss-dr13'
 
-password_versions = ['sdss-dr13', 'eboss']
-#, 'sequels']
+password_versions = []
 
 sdssurls = {
     'sdss-dr10d': 'http://data.sdss3.org/sas/dr10/boss/photoObj/301/',
@@ -119,7 +118,7 @@ class SdssPhotForm(forms.Form):
         if version in password_versions:
             password = self.cleaned_data['password']
             if not password in settings.SDSS_PASSWORDS:
-                raise ValidationError('Incorrect password.  Contact dstn@cmu.edu for help.')
+                raise ValidationError('Incorrect password.  Contact dstndstn@gmail.com for help.')
             print 'password okay'
         else:
             print 'public version'
@@ -623,7 +622,8 @@ def coord_search(req):
         boxform.initial = dict(ralo=200, rahi=201, declo=10, dechi=11)
 
     return render(req, 'sdssphot/coordsearch.html', {
-        'sdsscollab': 'sdss' in req.GET,
+        #'sdsscollab': 'sdss' in req.GET,
+        'sdsscollab': True,
         'form': form,
         'boxform': boxform,
         'version_choices': version_choices,

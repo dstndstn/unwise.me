@@ -35,11 +35,13 @@ width: 60%;
 <center>
 <h2>SDSS/WISE forced photometry search</h2>
 
+{% comment %}
 {% if sdsscollab %}
 <p>(This is the SDSS collaboration-only version; go to <a href="{{ url }}">public version</a>)</p>
 {% else %}
 <p>(Go to <a href="{{ url }}?sdss">SDSS collaboration-only version</a>)</p>
 {% endif %}
+{% endcomment %}
 
 <hr>
 
@@ -97,11 +99,13 @@ Thanks!
       </td>
     </tr>
 
+{% comment %}
     <tr>
       <td  align="right"><label for="id_password">SDSS "Well-known" Password:</label></td>
       <td>{{ form.password }}{{ form.password.errors }}</td>
       <input type="hidden" name="username" value="sdss" />
     </tr>
+{% endcomment %}
 
 {% endif %}
     <tr>
@@ -176,11 +180,14 @@ Thanks!
       </td>
     </tr>
 
+{% comment %}
     <tr>
       <td  align="right" colspan="2"><label for="id_password">SDSS "Well-known" Password:</label></td>
       <td colspan="2">{{ boxform.password }}{{ boxform.password.errors }}</td>
       <input type="hidden" name="username" value="sdss" />
     </tr>
+{% endcomment %}
+
 {% endif %}
 
     <tr>
@@ -210,10 +217,16 @@ Thanks!
   Versions:
 <br/>
 &nbsp;&nbsp;<b>DR10</b> Public; uses SDSS DR10 photometry<br />
-&nbsp;&nbsp;<b>DR13</b> Collab-only; uses SDSS "v5b" or "pre-DR13" photometry<br />
-&nbsp;&nbsp;<b>eBOSS</b> Collab-only; the version we used for eBOSS and SEQUELS targeting; uses "v5b" photometry<br />
+&nbsp;&nbsp;<b>DR13</b> Uses SDSS "v5b" or "pre-DR13" photometry<br />
+&nbsp;&nbsp;<b>eBOSS</b> The version we used for eBOSS and SEQUELS targeting; uses "v5b" photometry<br />
+
+
+{% comment %}
 <br /><br />
 Password hint: either the original SDSS password relating to the number of CCDs in the camera, or the SDSS-IV password relating to the aperture of the telescope.
+{% endcomment %}
+
+
 {% endif %}
 </div>
 
@@ -228,9 +241,13 @@ Password hint: either the original SDSS password relating to the number of CCDs 
 <h3>Do it yourself:</h3>
 <p>
 <a href="{{ dataurl }}">Direct file access</a>
+
+{% comment %}
 {% if sdsscollab %}
  &nbsp;|&nbsp; <a href="{{ dataurl }}/sdss-collab">SDSS-collab private directory</a>
 {% endif %}
+{% endcomment %}
+
 </p>
 
 <hr>
