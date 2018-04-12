@@ -165,7 +165,7 @@ def tileset_tgz(req):
     files = []
     for tile in tiles:
         coadd = tile.coadd
-        dirnm = str(os.path.join(version, coadd[:3], coadd))
+        dirnm = str(os.path.join(version, 'unwise-coadds', 'fulldepth', coadd[:3], coadd))
         for band in bands:
             for pat in pats:
                 files.append(str(os.path.join(dirnm, 'unwise-%s-w%i-%s' % (coadd, band, pat))))
@@ -196,7 +196,8 @@ def tile_tgz(req, coadd=None, bands=None, version=None):
 
     files = []
     coadd = tile.coadd
-    dirnm = os.path.join(version, coadd[:3], coadd)
+    dirnm = os.path.join(version, 'unwise-coadds', 'fulldepth',
+                         coadd[:3], coadd)
     base = os.path.join(dirnm, 'unwise-%s' % coadd)
     for band in bands:
         files.append(str(base + '-w%i-*' % (band)))
@@ -270,7 +271,7 @@ def cutout_fits(req):
 
     version = form.cleaned_data['version']
 
-    if version in ['neo1', 'neo2']:
+    if version in ['neo1', 'neo2', 'neo3']:
         bands = [b for b in bands if b in [1,2]]
 
     radius = size/2. * 2.75/3600.
@@ -292,7 +293,7 @@ def cutout_fits(req):
     
     for tile in tiles:
         coadd = tile.coadd
-        dirnm = os.path.join(settings.DATA_DIR, version, coadd[:3], coadd)
+        dirnm = os.path.join(settings.DATA_DIR, version, 'unwise-coadds', 'fulldepth', coadd[:3], coadd)
         base = os.path.join(dirnm, 'unwise-%s' % coadd)
         w1fn = str(base + '-w1-img-m.fits')
         wcs = Tan(w1fn, 0)
@@ -374,7 +375,7 @@ def cutout_jpg(req):
     
     for tile in tiles:
         coadd = tile.coadd
-        dirnm = os.path.join(settings.DATA_DIR, version, coadd[:3], coadd)
+        dirnm = os.path.join(settings.DATA_DIR, version, 'unwise-coadds', 'fulldepth', coadd[:3], coadd)
         base = os.path.join(dirnm, 'unwise-%s' % coadd)
 
         subwcs = None

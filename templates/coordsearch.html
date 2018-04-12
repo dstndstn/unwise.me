@@ -158,21 +158,19 @@ Thanks!
 <div class="notebox">
 <h3>Do it yourself:</h3>
 <p>
-<a href="/data/tiles.fits">FITS table of available tiles</a>
+<a href="/data/allwise/unwise-coadds/fulldepth/tiles.fits">FITS table of available tiles</a>
 and
-<a href="/data/">Direct file access</a> or
-<a href="/data/neo1">Direct file access for NEOWISE-R1 coadds</a>
-<a href="/data/neo2">Direct file access for new NEOWISE-R2 coadds</a>
+<a href="/data/">Direct file access</a>
 </p>
 
 <p>
 Example: to download all images covering SDSS Stripe 82:
 <div align="left">
 <pre>
-wget http://unwise.me/data/tiles.fits
+wget http://unwise.me/data/allwise/unwise-coadds/fulldepth/tiles.fits
 fitscopy tiles.fits"[dec>-1.6 && dec<1.6]" stripe82-tiles.fits
 tablist stripe82-tiles.fits"[col coadd_id]" | tail +3 | awk '{print $2}' \
-  | awk '{printf "wget -r -nH --cut-dirs=1 -c http://unwise.me/data/%s/%s/unwise-%s-w1-img-m.fits\n", substr($1,0,3),$1,$1}' \
+  | awk '{printf "wget -r -nH --cut-dirs=1 -c http://unwise.me/data/neo3/unwise-coadds/fulldepth/%s/%s/unwise-%s-w1-img-m.fits\n", substr($1,0,3),$1,$1}' \
   > download.sh
 chmod 755 download.sh
 ./download.sh

@@ -106,7 +106,7 @@ and the checkboxes below to select the bands and products to download for each t
   <tr class="{% cycle 'even' 'odd' %}">
     <td><input type="checkbox" name="tile{{ forloop.counter}}"
                value="{{ tile.coadd }}"></td>
-    <td><a href="/data/{{ version }}/{{tile.coadd|slice:":3"}}/{{tile.coadd}}/">{{ tile.coadd }}</a></td>
+    <td><a href="/data/{{ version }}/unwise-coadds/fulldepth/{{tile.coadd|slice:":3"}}/{{tile.coadd}}/">{{ tile.coadd }}</a></td>
     <td>{{ tile.ra|floatformat:3 }}</td>
     <td>{{ tile.dec|floatformat:3 }}</td>
     <td><a href="{% url 'tile-tgz' version=version coadd=tile.coadd bands=1 %}">w1.tgz</a></td>

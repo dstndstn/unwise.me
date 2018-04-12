@@ -14,8 +14,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
-SDSSPHOT_DATA_DIR = os.path.join(BASE_DIR, 'data-sdssphot')
-SDSSPHOT_DATA_URL = '/data-sdssphot'
+SDSSPHOT_DATA_DIR = os.path.join(BASE_DIR, 'data', 'allwise', 'unwise-phot')
+SDSSPHOT_DATA_URL = '/data/allwise/unwise-phot/'
 
 WINDOW_FLIST_KD = os.path.join(BASE_DIR, 'window_flist_cut.kd')
 
