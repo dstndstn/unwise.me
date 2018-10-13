@@ -13,6 +13,9 @@ from coadd.models import *
 from astrometry.util.fits import *
 from astrometry.util.starutil_numpy import *
 
+def tr_neo3(req):
+    return HttpResponseRedirect('https://faun.rc.fas.harvard.edu/ameisner/unwise/tr_neo3')
+
 def fulldepth_neo3(req):
     return HttpResponseRedirect('https://faun.rc.fas.harvard.edu/ameisner/unwise/fulldepth_neo3')
 

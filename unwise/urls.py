@@ -6,8 +6,11 @@ import sdssphot.views as phot
 tilepattern = r'[0-9]{4}[pm][0-9]{3}'
 
 urlpatterns = [
+    # These are redirects for Aaron
+    url(r'^tr_neo3/?$', co.tr_neo3),
     url(r'^fulldepth_neo3/?$', co.fulldepth_neo3),
     url(r'^tr_neo2/?$', co.tr_neo2),
+
     url(r'^tiles/$', co.TileList.as_view()),
     url(r'^tiles_near/$', co.CoordSearchTileList.as_view()),
     url(r'^tiledata/(?P<version>(neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern +
