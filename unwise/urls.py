@@ -7,6 +7,7 @@ tilepattern = r'[0-9]{4}[pm][0-9]{3}'
 
 urlpatterns = [
     # These are redirects for Aaron
+    url(r'^neo4/?$', co.fulldepth_neo4),
     url(r'^tr_neo3/?$', co.tr_neo3),
     url(r'^fulldepth_neo3/?$', co.fulldepth_neo3),
     url(r'^tr_neo2/?$', co.tr_neo2),
