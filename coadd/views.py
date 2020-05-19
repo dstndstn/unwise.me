@@ -36,8 +36,10 @@ coadd_version_choices = [
     ('neo2', 'NeoWISE-R 2'),
     ('neo3', 'NeoWISE-R 3'),
     ('neo4', 'NeoWISE-R 4'),
+    ('neo5', 'NeoWISE-R 5'),
+    ('neo6', 'NeoWISE-R 6'),
     ]
-coadd_version_default = 'neo4'
+coadd_version_default = 'neo6'
 
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,
