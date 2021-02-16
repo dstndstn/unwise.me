@@ -10,30 +10,17 @@ RUN apt update && \
     build-essential python3 python3-distutils python3-dev curl \
     git libpcre3 libpcre3-dev \
     pkg-config swig libcairo2-dev libnetpbm10-dev netpbm libpng-dev libjpeg-dev \
-    zlib1g-dev libbz2-dev libcfitsio-dev wcslib-dev python3-pip && \
+    zlib1g-dev libbz2-dev libcfitsio-dev wcslib-dev python3-pip file && \
     apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip install git://github.com/dstndstn/astrometry.net.git@0.84#egg=astrometry
+RUN pip3 install numpy scipy Django fitsio uwsgi
 
-#    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-#    python3 get-pip.py && \
-#    ln -s /usr/bin/python3 /usr/bin/python && \
-#    pip install --no-cache-dir -r requirements.txt && \
-#    pip install pyfits && \
-#    pip install -e git+http://github.com/dstndstn/astrometry.net@23579ec66cf38547264ef058204fc36abdcb40c4#egg=astrometry --log LOG_FILE
+RUN git clone https://github.com/dstndstn/astrometry.net.git astrometry \
+  && cd astrometry && git checkout 0.84
+RUN cd astrometry && make && make py && make extra && make install
 
-# COPY . /app
-# 
-# RUN cd tractor && make && \
-#     cd /app && \
-#     export PYTHONPATH=$(pwd)/legacypipe/py:$PYTHONPATH && \
-#     export PYTHONPATH=$(pwd)/tractor:$PYTHONPATH && \
-#     export PYTHONPATH=$(pwd)/decals-web:$PYTHONPATH && \
-#     cd decals-web && \
-#     python3 manage.py migrate && \
-#     apt-get -y clean
-# 
-# EXPOSE 80
-# 
-# ENTRYPOINT ["/app/entry.sh"]
-# #CMD ["python3", "decals-web/manage.py", "runserver", "0.0.0.0:8000"]
+RUN git clone https://github.com/dstndstn/unwise.me.git
+
+COPY entry.sh /app
+
+ENTRYPOINT ["/app/entry.sh"]
