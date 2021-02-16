@@ -3,13 +3,17 @@ FROM ubuntu:20.04
 SHELL ["/bin/bash", "-c"]
 WORKDIR /app
 
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt upgrade -y && \
-    apt install -y build-essential python3 python3-distutils python3-dev curl \
+    apt install -y --no-install-recommends \
+    build-essential python3 python3-distutils python3-dev curl \
     git libpcre3 libpcre3-dev \
     pkg-config swig libcairo2-dev libnetpbm10-dev netpbm libpng-dev libjpeg-dev \
     zlib1g-dev libbz2-dev libcfitsio-dev wcslib-dev python3-pip && \
     apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN pip install git://github.com/dstndstn/astrometry.net.git@0.84#egg=astrometry
 
 #    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 #    python3 get-pip.py && \
