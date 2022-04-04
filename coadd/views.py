@@ -44,8 +44,9 @@ coadd_version_choices = [
     ('neo4', 'NeoWISE-R 4'),
     ('neo5', 'NeoWISE-R 5'),
     ('neo6', 'NeoWISE-R 6'),
+    ('neo7', 'NeoWISE-R 7'),
     ]
-coadd_version_default = 'neo6'
+coadd_version_default = 'neo7'
 
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,
@@ -59,7 +60,7 @@ class CutoutSearchForm(CoaddForm):
     dec = forms.FloatField(required=False, validators=[parse_dec])
     size = forms.IntegerField(required=False, initial=100,
                               widget=forms.TextInput(attrs={'size': 6}))
-    bands = forms.CharField(required=False, initial='1234',
+    bands = forms.CharField(required=False, initial='12',
                             widget=forms.TextInput(attrs={'size': 6}))
 
     file_img_m    = forms.BooleanField(required=False, initial=True)
