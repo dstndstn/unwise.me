@@ -315,9 +315,9 @@ def cutout_fits(req):
         ok,x,y = wcs.radec2pixelxy(ra, dec)
         x = int(round(x-1.))
         y = int(round(y-1.))
-        x0 = x - size/2
+        x0 = x - size//2
         x1 = x0 + size
-        y0 = y - size/2
+        y0 = y - size//2
         y1 = y0 + size
         if x1 <= 0 or y1 <= 0:
             continue
@@ -402,9 +402,9 @@ def cutout_jpg(req):
                 ok,x,y = wcs.radec2pixelxy(ra, dec)
                 x = int(round(x-1.))
                 y = int(round(y-1.))
-                x0 = x - size/2
+                x0 = x - size//2
                 x1 = x0 + size
-                y0 = y - size/2
+                y0 = y - size//2
                 y1 = y0 + size
                 if x1 <= 0 or y1 <= 0:
                     break
