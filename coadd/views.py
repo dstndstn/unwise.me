@@ -279,7 +279,7 @@ def cutout_fits(req):
     if size is None:
         size = 100
     else:
-        size = min(512, size)
+        size = min(1024, size)
     bandstr = form.cleaned_data['bands']
     bands = [int(c) for c in bandstr]
     bands = [b for b in bands if b in [1,2,3,4]]
@@ -368,7 +368,7 @@ def cutout_jpg(req):
     if size is None:
         size = 100
     else:
-        size = min(512, size)
+        size = min(1024, size)
     # Ignoring this for now...
     # bandstr = form.cleaned_data['bands']
     # bands = [int(c) for c in bandstr]
