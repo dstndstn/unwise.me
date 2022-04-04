@@ -22,7 +22,7 @@ class UnwiseDatabaseRouter(object):
         return self._db(model, **hints)
 
     def allow_syncdb(self, db, model):
-        print 'allow_syncdb: db', db, 'model', model
+        #print 'allow_syncdb: db', db, 'model', model
         if db == 'usage':
             return model in self.usage
         if db == 'session':

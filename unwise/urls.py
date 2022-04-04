@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.urls import path, re_path #include, url
 
 import coadd.views as co
 import sdssphot.views as phot
@@ -7,38 +7,38 @@ tilepattern = r'[0-9]{4}[pm][0-9]{3}'
 
 urlpatterns = [
     # These are redirects for Aaron
-    url(r'^neo4/?$', co.fulldepth_neo4),
-    url(r'^tr_neo3/?$', co.tr_neo3),
-    url(r'^fulldepth_neo3/?$', co.fulldepth_neo3),
-    url(r'^tr_neo2/?$', co.tr_neo2),
+    re_path(r'^neo4/?$', co.fulldepth_neo4),
+    re_path(r'^tr_neo3/?$', co.tr_neo3),
+    re_path(r'^fulldepth_neo3/?$', co.fulldepth_neo3),
+    re_path(r'^tr_neo2/?$', co.tr_neo2),
 
-    url(r'^tiles/$', co.TileList.as_view()),
-    url(r'^tiles_near/$', co.CoordSearchTileList.as_view()),
+    re_path(r'^tiles/$', co.TileList.as_view()),
+    re_path(r'^tiles_near/$', co.CoordSearchTileList.as_view()),
 
     # Add new dataset names here!
-    url(r'^tiledata/(?P<version>(neo6|neo5|neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern +
+    re_path(r'^tiledata/(?P<version>(neo7|neo6|neo5|neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern +
         ')-w(?P<bands>1?2?3?4?).tgz/?$',
         co.tile_tgz, name='tile-tgz'),
 
-    url(r'^tiledata/(?P<version>(neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
+    re_path(r'^tiledata/(?P<version>(neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
         co.tile_tgz, name='tile-tgz'),
-    url(r'^tilesetdata/?$', co.tileset_tgz, name='tileset-tgz'),
-    url(r'^imgsearch/?$', co.coord_search, name='search'),
-    url(r'^search/?$', co.coord_search, name='search'),
-    url(r'^cutout_fits/?$', co.cutout_fits, name='cutout_fits'),
-    url(r'^cutout_jpg/?$', co.cutout_jpg, name='cutout_jpg'),
-    # url(r'^usage/?$', usage),
-    url(r'^$', co.index, name='index'),
+    re_path(r'^tilesetdata/?$', co.tileset_tgz, name='tileset-tgz'),
+    re_path(r'^imgsearch/?$', co.coord_search, name='search'),
+    re_path(r'^search/?$', co.coord_search, name='search'),
+    re_path(r'^cutout_fits/?$', co.cutout_fits, name='cutout_fits'),
+    re_path(r'^cutout_jpg/?$', co.cutout_jpg, name='cutout_jpg'),
+    # re_path(r'^usage/?$', usage),
+    re_path(r'^$', co.index, name='index'),
 ]
 
 urlpatterns += [
-  url(r'^photsearch/?$', phot.coord_search, name='phot-search'),
-  url(r'^phot_near/?$', phot.conesearch_results),
-  url(r'^phot_box/?$', phot.boxsearch_results),
-  url(r'^phot_fieldset/?$', phot.phot_fieldset_tgz, name='phot-fieldset-tgz'),
-  url(r'^phot_tileset/?$', phot.phot_tileset_tgz, name='phot-tileset-tgz'),
-  url(r'^fits_sdss_fields_near/?$', phot.fields_near_fits, name='fits_sdss_fields_near'),
-  url(r'^fits_sdss_fields_box/?$', phot.fields_box_fits, name='fits_sdss_fields_box'),
+  re_path(r'^photsearch/?$', phot.coord_search, name='phot-search'),
+  re_path(r'^phot_near/?$', phot.conesearch_results),
+  re_path(r'^phot_box/?$', phot.boxsearch_results),
+  re_path(r'^phot_fieldset/?$', phot.phot_fieldset_tgz, name='phot-fieldset-tgz'),
+  re_path(r'^phot_tileset/?$', phot.phot_tileset_tgz, name='phot-tileset-tgz'),
+  re_path(r'^fits_sdss_fields_near/?$', phot.fields_near_fits, name='fits_sdss_fields_near'),
+  re_path(r'^fits_sdss_fields_box/?$', phot.fields_box_fits, name='fits_sdss_fields_box'),
 ]
 
 #urlpatterns += patterns('animate',

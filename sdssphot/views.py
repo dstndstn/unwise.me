@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseForbidden, QueryDict, StreamingHttpResponse
-from django.shortcuts import render_to_response, get_object_or_404, redirect, render
-from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django import forms
 from django.views.generic import ListView, DetailView
@@ -108,20 +108,20 @@ class SdssPhotForm(forms.Form):
 
 
         version = str(self.cleaned_data['version'])
-        print 'Version', version
+        #print 'Version', version
         if version is None or len(version) == 0:
             version = version_default
-        print 'Version', version
+        #print 'Version', version
         if not version in [k for k,v in version_choices]:
             raise ValidationError('Unknown version')
-        print 'known version'
+        #print 'known version'
         if version in password_versions:
             password = self.cleaned_data['password']
             if not password in settings.SDSS_PASSWORDS:
                 raise ValidationError('Incorrect password.  Contact dstndstn@gmail.com for help.')
-            print 'password okay'
+            #print 'password okay'
         else:
-            print 'public version'
+            print('public version')
         self.cleaned_data['version'] = version
         return self.cleaned_data
 
@@ -248,7 +248,7 @@ def fields_box_fits(req):
 def boxsearch_results(req, fields_fits_table=False):
     form = SdssPhotRaDecBoxSearchForm(req.GET)
     if not form.is_valid():
-        print 'Form not valid'
+        print('Form not valid')
         return HttpResponseRedirect(reverse(coord_search))
 
     ralo = form.cleaned_data['ralo']
@@ -263,7 +263,7 @@ def conesearch_results(req, fields_fits_table=False):
     #
     form = SdssPhotRaDecSearchForm(req.GET)
     if not form.is_valid():
-        print 'Form not valid'
+        print('Form not valid')
         return HttpResponseRedirect(reverse(coord_search))
 
     ra  = form.cleaned_data['ra']
@@ -485,7 +485,7 @@ def _common_search_results(req, form, fields_fits_table=False,
             extra_where="and version='%s'" % version,
             tileclass=PhotTile)
         tiles = list(tiles)
-        print 'N tiles:', len(tiles)
+        print('N tiles:', len(tiles))
 
         if box is not None:
             # Cut cone to box...
@@ -556,7 +556,7 @@ def coord_search(req):
                                    radius_str=form.data.get('radius', None))
 
         if form.is_valid():
-            print 'Form is valid: data', form.cleaned_data
+            print('Form is valid: data', form.cleaned_data)
 
             # Process the data in form.cleaned_data
             ra,dec = parse_coord(form.cleaned_data['coord'])
@@ -594,7 +594,7 @@ def coord_search(req):
     elif 'ralo' in req.GET:
         boxform = SdssPhotRaDecBoxSearchForm(req.GET)
         if boxform.is_valid():
-            print 'Form is valid: data', boxform.cleaned_data
+            print('Form is valid: data', boxform.cleaned_data)
             # Process the data in boxform.cleaned_data
             ralo = parse_ra(boxform.cleaned_data['ralo'])
             rahi = parse_ra(boxform.cleaned_data['rahi'])

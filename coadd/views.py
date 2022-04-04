@@ -1,6 +1,12 @@
+if __name__ == '__main__':
+    import os
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'unwise.settings'
+    import django
+    django.setup()
+
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, QueryDict, StreamingHttpResponse
-from django.shortcuts import render_to_response, get_object_or_404, redirect, render
-from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django import forms
 from django.views.generic import ListView, DetailView
@@ -233,7 +239,6 @@ def coord_search(req):
             tracking.ra = ra
             tracking.dec = dec
             tracking.radius = radius
-            print 'ra,dec,radius', ra,dec,radius
             
             if dotrack:
                 tracking.save()
@@ -505,3 +510,30 @@ def usage(req):
 
 
     return HttpResponse('<br/>'.join(ss))
+
+
+
+if __name__ == '__main__':
+    import sys
+    import logging
+    lvl = logging.DEBUG
+    logging.basicConfig(level=lvl, format='%(message)s', stream=sys.stdout)
+
+    from django.test import Client
+    c = Client()
+    #r = c.get('/')
+    #r = c.get('/tiles_near/?version=neo7&ra=41&dec=10&radius=0')
+    #r = c.get('/cutout_fits?version=neo7&ra=0&dec=0&size=100&bands=1&file_img_m=on')
+    #r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
+
+    print('100')
+    r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=100&bands=1&file_img_m=on')
+
+    f = open('out.bin', 'wb')
+    for x in r:
+        f.write(x)
+    f.close()
+
+    print('99')
+    r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
+    
