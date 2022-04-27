@@ -6,6 +6,12 @@ from django import forms
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+if __name__ == '__main__':
+    import os
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'unwise.settings'
+    import django
+    django.setup()
+
 import tempfile
 
 from unwise.common import *
@@ -316,7 +322,7 @@ def _common_search_results(req, form, fields_fits_table=False,
         I,nil = tree_search_radec(kd, ra, dec, srad,
                                   sortdists=True)
         tree_close(kd)
-        #print 'Search result:', len(I), 'fields'
+        print('Search result:', len(I), 'fields')
         if len(I):
             T = fits_table(kdfn, hdu=6, rows=I, tabledata_class=mytabledata)
         else:
@@ -351,7 +357,7 @@ def _common_search_results(req, form, fields_fits_table=False,
         
         tempfn = create_temp()
         T.writeto(tempfn)
-        res = StreamingHttpResponse(open(tempfn))
+        res = StreamingHttpResponse(open(tempfn,'rb'))
         os.unlink(tempfn)
         res['Content-type'] = 'application/fits'
         res['Content-Disposition'] = 'attachment; filename="sdss-fields.fits"'
@@ -368,7 +374,7 @@ def _common_search_results(req, form, fields_fits_table=False,
                               'photoWiseForced-%06i-%i-%04i.fits' %
                               (run, camcol, field))
             if not os.path.exists(fn):
-                #print 'Does not exist:', fn
+                print('Does not exist:', fn)
                 continue
             tt = fits_table(fn)
             if tt is None:
@@ -405,14 +411,14 @@ def _common_search_results(req, form, fields_fits_table=False,
         if cone is not None:
             T.cut(np.argsort(T.match_dist))
         del TT
-        #print 'Total of', len(T), 'sources'
+        print('Total of', len(T), 'sources')
         #print 'has_wise_phot:', np.unique(T.has_wise_phot)
         tempfn = create_temp()
         ### HACK!!
         T.has_wise_phot = np.ones(len(T), bool)
         T.writeto(tempfn)
         del T
-        res = StreamingHttpResponse(open(tempfn))
+        res = StreamingHttpResponse(open(tempfn,'rb'))
         os.unlink(tempfn)
         res['Content-type'] = 'application/fits'
         res['Content-Disposition'] = 'attachment; filename="sdsswise.fits"'
@@ -632,3 +638,16 @@ def coord_search(req):
         'dataurl': settings.SDSSPHOT_DATA_URL,
     })    
 
+if __name__ == '__main__':
+    from django.test import Client
+    c = Client()
+    r = c.get('/phot_near/?ra=180&dec=30&radius=0.1&datatype=flat&version=sdss-dr13&sdss')
+    print('r:', r)
+
+    print(dir(r))
+
+    f = open('out', 'wb')
+    for x in r:
+        f.write(x)
+    f.close()
+    
