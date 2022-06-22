@@ -10,6 +10,9 @@ from unwise import settings
 import subprocess
 
 def tar_files(req, files, download_fn, basedir=settings.DATA_DIR):
+    for fn in files:
+        if not os.path.exists(fn):
+            raise RuntimeError('No such file: ' + fn)
     cmd = ['tar', '-c', '-z'] + files
     cmd = ' '.join(cmd)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,

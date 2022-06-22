@@ -48,6 +48,11 @@ coadd_version_choices = [
     ]
 coadd_version_default = 'neo7'
 
+def check_version(ver):
+    okvers = [v for v,_ in coadd_version_choices]
+    return ver in okvers
+
+
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,
                                 choices=coadd_version_choices)
@@ -140,7 +145,7 @@ def tileset_tgz(req):
     if tiles.count() > maxtiles:
         return HttpResponse('Too many tiles requested; max %i' % maxtiles,
                             status=413)
-    
+
     pats = []
     prods = []
     for key,pat in [('frames',  'frames.fits'),
@@ -163,7 +168,9 @@ def tileset_tgz(req):
             bands.append(band)
 
     version = req.POST['version']
-            
+    if not check_version(version):
+        return HttpResponse('Invalid version')
+
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products=' '.join(prods),
                             tiles=' '.join([t.coadd for t in tiles]),
@@ -199,7 +206,9 @@ def tile_tgz(req, coadd=None, bands=None, version=None):
 
     if version is None:
         version = coadd_version_default
-        
+    if not check_version(version):
+        return HttpResponse('Invalid version')
+
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products='all',
                             tiles=tile.coadd,
