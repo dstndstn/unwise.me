@@ -14,10 +14,10 @@ def tar_files(req, files, download_fn, basedir=settings.DATA_DIR):
     for fn in files:
         if not os.path.exists(os.path.join(basedir, fn)):
             raise RuntimeError('No such file: ' + fn)
-    cmd = ['tar', '-c', '-z'] + files
-    cmd = ' '.join(cmd)
+    cmd = ['tar', '-c', '-z', '-f', '-'] + files
+    print('Command:', cmd)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                            shell=True, 
+                            shell=False,
                             bufsize=4096, close_fds=True,
                             cwd=basedir)
     pipe = proc.stdout
