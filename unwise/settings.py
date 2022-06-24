@@ -41,7 +41,7 @@ TEMPLATES = [
     },
 ]
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["unwise.me", "www.unwise.me", "lb.cosmo-unwise.production.svc.spin.nersc.org"]
 
 
 INSTALLED_APPS = (

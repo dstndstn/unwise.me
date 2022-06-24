@@ -1,6 +1,12 @@
+if __name__ == '__main__':
+    import os
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'unwise.settings'
+    import django
+    django.setup()
+
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, QueryDict, StreamingHttpResponse
-from django.shortcuts import render_to_response, get_object_or_404, redirect, render
-from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django import forms
 from django.views.generic import ListView, DetailView
@@ -38,8 +44,14 @@ coadd_version_choices = [
     ('neo4', 'NeoWISE-R 4'),
     ('neo5', 'NeoWISE-R 5'),
     ('neo6', 'NeoWISE-R 6'),
+    ('neo7', 'NeoWISE-R 7'),
     ]
-coadd_version_default = 'neo6'
+coadd_version_default = 'neo7'
+
+def check_version(ver):
+    okvers = [v for v,_ in coadd_version_choices]
+    return ver in okvers
+
 
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,
@@ -53,7 +65,7 @@ class CutoutSearchForm(CoaddForm):
     dec = forms.FloatField(required=False, validators=[parse_dec])
     size = forms.IntegerField(required=False, initial=100,
                               widget=forms.TextInput(attrs={'size': 6}))
-    bands = forms.CharField(required=False, initial='1234',
+    bands = forms.CharField(required=False, initial='12',
                             widget=forms.TextInput(attrs={'size': 6}))
 
     file_img_m    = forms.BooleanField(required=False, initial=True)
@@ -133,7 +145,7 @@ def tileset_tgz(req):
     if tiles.count() > maxtiles:
         return HttpResponse('Too many tiles requested; max %i' % maxtiles,
                             status=413)
-    
+
     pats = []
     prods = []
     for key,pat in [('frames',  'frames.fits'),
@@ -156,7 +168,9 @@ def tileset_tgz(req):
             bands.append(band)
 
     version = req.POST['version']
-            
+    if not check_version(version):
+        return HttpResponse('Invalid version')
+
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products=' '.join(prods),
                             tiles=' '.join([t.coadd for t in tiles]),
@@ -192,7 +206,9 @@ def tile_tgz(req, coadd=None, bands=None, version=None):
 
     if version is None:
         version = coadd_version_default
-        
+    if not check_version(version):
+        return HttpResponse('Invalid version')
+
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products='all',
                             tiles=tile.coadd,
@@ -233,7 +249,6 @@ def coord_search(req):
             tracking.ra = ra
             tracking.dec = dec
             tracking.radius = radius
-            print 'ra,dec,radius', ra,dec,radius
             
             if dotrack:
                 tracking.save()
@@ -273,7 +288,7 @@ def cutout_fits(req):
     if size is None:
         size = 100
     else:
-        size = min(512, size)
+        size = min(1024, size)
     bandstr = form.cleaned_data['bands']
     bands = [int(c) for c in bandstr]
     bands = [b for b in bands if b in [1,2,3,4]]
@@ -309,9 +324,9 @@ def cutout_fits(req):
         ok,x,y = wcs.radec2pixelxy(ra, dec)
         x = int(round(x-1.))
         y = int(round(y-1.))
-        x0 = x - size/2
+        x0 = x - size//2
         x1 = x0 + size
-        y0 = y - size/2
+        y0 = y - size//2
         y1 = y0 + size
         if x1 <= 0 or y1 <= 0:
             continue
@@ -362,7 +377,7 @@ def cutout_jpg(req):
     if size is None:
         size = 100
     else:
-        size = min(512, size)
+        size = min(1024, size)
     # Ignoring this for now...
     # bandstr = form.cleaned_data['bands']
     # bands = [int(c) for c in bandstr]
@@ -396,9 +411,9 @@ def cutout_jpg(req):
                 ok,x,y = wcs.radec2pixelxy(ra, dec)
                 x = int(round(x-1.))
                 y = int(round(y-1.))
-                x0 = x - size/2
+                x0 = x - size//2
                 x1 = x0 + size
-                y0 = y - size/2
+                y0 = y - size//2
                 y1 = y0 + size
                 if x1 <= 0 or y1 <= 0:
                     break
@@ -505,3 +520,30 @@ def usage(req):
 
 
     return HttpResponse('<br/>'.join(ss))
+
+
+
+if __name__ == '__main__':
+    import sys
+    import logging
+    lvl = logging.DEBUG
+    logging.basicConfig(level=lvl, format='%(message)s', stream=sys.stdout)
+
+    from django.test import Client
+    c = Client()
+    #r = c.get('/')
+    #r = c.get('/tiles_near/?version=neo7&ra=41&dec=10&radius=0')
+    #r = c.get('/cutout_fits?version=neo7&ra=0&dec=0&size=100&bands=1&file_img_m=on')
+    #r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
+
+    print('100')
+    r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=100&bands=1&file_img_m=on')
+
+    f = open('out.bin', 'wb')
+    for x in r:
+        f.write(x)
+    f.close()
+
+    print('99')
+    r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
+    

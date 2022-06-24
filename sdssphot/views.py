@@ -1,10 +1,16 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, HttpResponseForbidden, QueryDict, StreamingHttpResponse
-from django.shortcuts import render_to_response, get_object_or_404, redirect, render
-from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django import forms
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+if __name__ == '__main__':
+    import os
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'unwise.settings'
+    import django
+    django.setup()
 
 import tempfile
 
@@ -108,20 +114,20 @@ class SdssPhotForm(forms.Form):
 
 
         version = str(self.cleaned_data['version'])
-        print 'Version', version
+        #print 'Version', version
         if version is None or len(version) == 0:
             version = version_default
-        print 'Version', version
+        #print 'Version', version
         if not version in [k for k,v in version_choices]:
             raise ValidationError('Unknown version')
-        print 'known version'
+        #print 'known version'
         if version in password_versions:
             password = self.cleaned_data['password']
             if not password in settings.SDSS_PASSWORDS:
                 raise ValidationError('Incorrect password.  Contact dstndstn@gmail.com for help.')
-            print 'password okay'
+            #print 'password okay'
         else:
-            print 'public version'
+            print('public version')
         self.cleaned_data['version'] = version
         return self.cleaned_data
 
@@ -248,7 +254,7 @@ def fields_box_fits(req):
 def boxsearch_results(req, fields_fits_table=False):
     form = SdssPhotRaDecBoxSearchForm(req.GET)
     if not form.is_valid():
-        print 'Form not valid'
+        print('Form not valid')
         return HttpResponseRedirect(reverse(coord_search))
 
     ralo = form.cleaned_data['ralo']
@@ -263,7 +269,7 @@ def conesearch_results(req, fields_fits_table=False):
     #
     form = SdssPhotRaDecSearchForm(req.GET)
     if not form.is_valid():
-        print 'Form not valid'
+        print('Form not valid')
         return HttpResponseRedirect(reverse(coord_search))
 
     ra  = form.cleaned_data['ra']
@@ -316,7 +322,7 @@ def _common_search_results(req, form, fields_fits_table=False,
         I,nil = tree_search_radec(kd, ra, dec, srad,
                                   sortdists=True)
         tree_close(kd)
-        #print 'Search result:', len(I), 'fields'
+        print('Search result:', len(I), 'fields')
         if len(I):
             T = fits_table(kdfn, hdu=6, rows=I, tabledata_class=mytabledata)
         else:
@@ -351,7 +357,7 @@ def _common_search_results(req, form, fields_fits_table=False,
         
         tempfn = create_temp()
         T.writeto(tempfn)
-        res = StreamingHttpResponse(open(tempfn))
+        res = StreamingHttpResponse(open(tempfn,'rb'))
         os.unlink(tempfn)
         res['Content-type'] = 'application/fits'
         res['Content-Disposition'] = 'attachment; filename="sdss-fields.fits"'
@@ -368,7 +374,7 @@ def _common_search_results(req, form, fields_fits_table=False,
                               'photoWiseForced-%06i-%i-%04i.fits' %
                               (run, camcol, field))
             if not os.path.exists(fn):
-                #print 'Does not exist:', fn
+                print('Does not exist:', fn)
                 continue
             tt = fits_table(fn)
             if tt is None:
@@ -405,14 +411,14 @@ def _common_search_results(req, form, fields_fits_table=False,
         if cone is not None:
             T.cut(np.argsort(T.match_dist))
         del TT
-        #print 'Total of', len(T), 'sources'
+        print('Total of', len(T), 'sources')
         #print 'has_wise_phot:', np.unique(T.has_wise_phot)
         tempfn = create_temp()
         ### HACK!!
         T.has_wise_phot = np.ones(len(T), bool)
         T.writeto(tempfn)
         del T
-        res = StreamingHttpResponse(open(tempfn))
+        res = StreamingHttpResponse(open(tempfn,'rb'))
         os.unlink(tempfn)
         res['Content-type'] = 'application/fits'
         res['Content-Disposition'] = 'attachment; filename="sdsswise.fits"'
@@ -485,7 +491,7 @@ def _common_search_results(req, form, fields_fits_table=False,
             extra_where="and version='%s'" % version,
             tileclass=PhotTile)
         tiles = list(tiles)
-        print 'N tiles:', len(tiles)
+        print('N tiles:', len(tiles))
 
         if box is not None:
             # Cut cone to box...
@@ -556,7 +562,7 @@ def coord_search(req):
                                    radius_str=form.data.get('radius', None))
 
         if form.is_valid():
-            print 'Form is valid: data', form.cleaned_data
+            print('Form is valid: data', form.cleaned_data)
 
             # Process the data in form.cleaned_data
             ra,dec = parse_coord(form.cleaned_data['coord'])
@@ -594,7 +600,7 @@ def coord_search(req):
     elif 'ralo' in req.GET:
         boxform = SdssPhotRaDecBoxSearchForm(req.GET)
         if boxform.is_valid():
-            print 'Form is valid: data', boxform.cleaned_data
+            print('Form is valid: data', boxform.cleaned_data)
             # Process the data in boxform.cleaned_data
             ralo = parse_ra(boxform.cleaned_data['ralo'])
             rahi = parse_ra(boxform.cleaned_data['rahi'])
@@ -632,3 +638,16 @@ def coord_search(req):
         'dataurl': settings.SDSSPHOT_DATA_URL,
     })    
 
+if __name__ == '__main__':
+    from django.test import Client
+    c = Client()
+    r = c.get('/phot_near/?ra=180&dec=30&radius=0.1&datatype=flat&version=sdss-dr13&sdss')
+    print('r:', r)
+
+    print(dir(r))
+
+    f = open('out', 'wb')
+    for x in r:
+        f.write(x)
+    f.close()
+    
