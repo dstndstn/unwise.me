@@ -13,7 +13,7 @@ RUN apt update && \
     zlib1g-dev libbz2-dev libcfitsio-dev wcslib-dev python3-pip file && \
     apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip3 install numpy scipy Django fitsio uwsgi
+RUN pip3 install numpy scipy Django fitsio uwsgi tzdata
 
 RUN git clone https://github.com/dstndstn/astrometry.net.git astrometry \
   && cd astrometry && git checkout 0.84
