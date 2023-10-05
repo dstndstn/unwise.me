@@ -16,11 +16,10 @@ RUN apt update && \
 RUN pip3 install numpy scipy Django fitsio uwsgi tzdata
 
 RUN git clone https://github.com/dstndstn/astrometry.net.git astrometry \
-  && cd astrometry && git checkout 0.84
-RUN cd astrometry && make && make py && make extra && make install
+    && cd astrometry && make && make py && make extra && make install
 
 RUN git clone https://github.com/dstndstn/unwise.me.git
 
-COPY entry.sh /app
+COPY entry.sh /app/
 
 ENTRYPOINT ["/app/entry.sh"]
