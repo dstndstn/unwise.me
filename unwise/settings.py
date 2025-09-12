@@ -41,7 +41,8 @@ TEMPLATES = [
     },
 ]
 
-ALLOWED_HOSTS = ["unwise.me", "www.unwise.me", "lb.cosmo-unwise.production.svc.spin.nersc.org"]
+ALLOWED_HOSTS = ["unwise.me", "www.unwise.me", "lb.cosmo-unwise.production.svc.spin.nersc.org",
+                 'testserver']
 
 
 INSTALLED_APPS = (
@@ -52,10 +53,13 @@ INSTALLED_APPS = (
     'sdssphot',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+
+    'astrometry.net.tempfile_middleware.TempfileMiddleware',
+
     #'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.contrib.messages.middleware.MessageMiddleware',
     # Not in Django 1.3

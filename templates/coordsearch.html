@@ -84,7 +84,7 @@ Thanks!
   The unWISE coadds are on the same tile centers as the WISE Atlas Images.
   <br/>They are about 1.6 degrees wide (2048 pixels at 2.75" for unWISE).
   <br/><br/>
-  The "NeoWISE-R1" version is described in <a href="https://arxiv.org/abs/1603.05664">Meisner et al 2016, arXiv:1603.05664</a>, and includes data from the original WISE mission as well as the NeoWISE-Reactivation Year 1 data.  It also has better artifact removal than the "AllWISE" version.  The "AllWISE" version is described in <a href="http://arxiv.org/abs/1405.0308">Lang 2014, arXiv:1405.0308</a>, and includes data from the original WISE mission.
+  The "NeoWISE-R1" version is described in <a href="https://arxiv.org/abs/1603.05664">Meisner et al 2016, arXiv:1603.05664</a>, and includes data from the original WISE mission as well as the NeoWISE-Reactivation Year 1 data.  It also has better artifact removal than the "AllWISE" version.  The "AllWISE" version is described in <a href="https://arxiv.org/abs/1405.0308">Lang 2014, arXiv:1405.0308</a>, and includes data from the original WISE mission.
 </td></tr>
 </form>
 
@@ -147,7 +147,7 @@ Thanks!
   Returns a .tar.gz file of FITS cutouts, for all tiles overlapping the given RA,Dec<br/><br/>
   Maximum cutout size is 1024 pixels.<br/><br/>
   Note that you can script this up pretty easily: just request a URL like:<br/>
-  <a href="{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12">http://unwise.me{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12</a><br />
+  <a href="{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12">https://unwise.me{% url 'cutout_fits' %}?version=neo1&ra=41&dec=10&size=100&bands=12</a><br />
   <tt>version</tt> takes value <tt>neo2</tt>, <tt>neo1</tt> or <tt>allwise</tt>.<br/>
   To select a subset of the file types, add <tt>&file_img_m=on</tt>, <tt>&file_invvar_m=on</tt>, <tt>&file_n_m=on</tt>, or <tt>&file_std_m=on</tt> to the URL.
 </td></tr>
@@ -167,10 +167,10 @@ and
 Example: to download all images covering SDSS Stripe 82:
 <div align="left">
 <pre>
-wget http://unwise.me/data/allwise/unwise-coadds/fulldepth/tiles.fits
+wget https://unwise.me/data/allwise/unwise-coadds/fulldepth/tiles.fits
 fitscopy tiles.fits"[dec>-1.6 && dec<1.6]" stripe82-tiles.fits
 tablist stripe82-tiles.fits"[col coadd_id]" | tail +3 | awk '{print $2}' \
-  | awk '{printf "wget -r -nH --cut-dirs=1 -c http://unwise.me/data/neo3/unwise-coadds/fulldepth/%s/%s/unwise-%s-w1-img-m.fits\n", substr($1,0,3),$1,$1}' \
+  | awk '{printf "wget -r -nH --cut-dirs=1 -c https://unwise.me/data/neo3/unwise-coadds/fulldepth/%s/%s/unwise-%s-w1-img-m.fits\n", substr($1,0,3),$1,$1}' \
   > download.sh
 chmod 755 download.sh
 ./download.sh

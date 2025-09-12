@@ -52,7 +52,6 @@ def check_version(ver):
     okvers = [v for v,_ in coadd_version_choices]
     return ver in okvers
 
-
 class CoaddForm(forms.Form):
     version = forms.ChoiceField(required=False, initial=coadd_version_default,
                                 choices=coadd_version_choices)
@@ -295,7 +294,7 @@ def cutout_fits(req):
 
     version = form.cleaned_data['version']
 
-    if version in ['neo1', 'neo2', 'neo3']:
+    if 'neo' in version:
         bands = [b for b in bands if b in [1,2]]
 
     radius = size/2. * 2.75/3600.
@@ -304,6 +303,7 @@ def cutout_fits(req):
 
     # Create a temp dir in which to place cutouts
     tempdir = tempfile.mkdtemp()
+    req.tempdirs.append(tempdir)
     fns = []
 
     filetypes = []
@@ -354,11 +354,8 @@ def cutout_fits(req):
                 fitsio.write(outfn, img, header=hdr)
                 fns.append(basefn)
 
-    fns.extend([';', 'rm', '-R', tempdir])
-
     return tar_files(req, fns, 'cutouts-fits_%.4f_%.4f.tar.gz' % (ra, dec),
                      basedir=tempdir)
-
 
 def cutout_jpg(req):
     import tempfile
@@ -537,13 +534,13 @@ if __name__ == '__main__':
     #r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
 
     print('100')
-    r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=100&bands=1&file_img_m=on')
-
+    #r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=100&bands=1&file_img_m=on')
+    r = c.get('/cutout_fits?version=neo1&ra=41&dec=10&size=100&bands=12')
     f = open('out.bin', 'wb')
     for x in r:
         f.write(x)
     f.close()
 
-    print('99')
-    r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
+    #print('99')
+    #r = c.get('/cutout_fits?version=allwise&ra=226.037225&dec=-23.445218&size=99&bands=1&file_img_m=on')
     
