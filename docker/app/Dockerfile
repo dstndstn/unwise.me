@@ -16,7 +16,7 @@ RUN apt update && \
 RUN pip3 install numpy scipy Django fitsio uwsgi tzdata
 
 RUN git clone https://github.com/dstndstn/astrometry.net.git astrometry \
-    && cd astrometry && make && make py && make extra && make install
+    && cd astrometry && make && make py && make extra && make install && echo 1
 
 RUN git clone https://github.com/dstndstn/unwise.me.git
 
