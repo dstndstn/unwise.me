@@ -332,14 +332,14 @@ def cutout_fits(req):
             continue
         if x0 >= wcs.get_width() or y0 >= wcs.get_height():
             continue
-        x0 = max(x0, 0)
-        y0 = max(y0, 0)
-        x1 = min(x1, wcs.get_width())
-        y1 = min(y1, wcs.get_height())
+        x0 = int(max(x0, 0))
+        y0 = int(max(y0, 0))
+        x1 = int(min(x1, wcs.get_width()))
+        y1 = int(min(y1, wcs.get_height()))
 
-        hdr = fitsio.FITSHDR()
+        #hdr = fitsio.FITSHDR()
         subwcs = wcs.get_subimage(x0, y0, x1-x0, y1-y0)
-        subwcs.add_to_header(hdr)
+        #subwcs.add_to_header(hdr)
 
         for band in bands:
             for ft in filetypes:
@@ -348,7 +348,14 @@ def cutout_fits(req):
                         'n_m':      '-w%i-n-m.fits.gz',
                         'std_m':    '-w%i-std-m.fits.gz' }[ft]
                 fn = str(base + pat % band)
-                img = fitsio.FITS(fn)[0][y0:y1, x0:x1]
+                fits_hdu = fitsio.FITS(fn)[0]
+                img = fits_hdu[y0:y1, x0:x1]
+                hdr = fits_hdu.read_header()
+                for k in ['WCSAXES', 'CTYPE1', 'CTYPE2', 'EQUINOX', 'LONPOLE', 'LATPOLE',
+                          'CRVAL1', 'CRVAL2', 'CRPIX1', 'CRPIX2', 'CUNIT1', 'CUNIT2',
+                          'CD1_1', 'CD1_2', 'CD2_1', 'CD2_2', 'IMAGEW', 'IMAGEH']:
+                    hdr.delete(k)
+                subwcs.add_to_header(hdr)
                 basefn = os.path.basename(fn)
                 outfn = os.path.join(tempdir, basefn)
                 fitsio.write(outfn, img, header=hdr)

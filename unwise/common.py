@@ -11,10 +11,22 @@ import subprocess
 
 def tar_files(req, files, download_fn, basedir=settings.DATA_DIR):
     import os
+    all_files = []
     for fn in files:
-        if not os.path.exists(os.path.join(basedir, fn)):
-            raise RuntimeError('No such file: ' + fn)
-    cmd = ['tar', '-c', '-z', '-f', '-'] + files
+        path = os.path.join(basedir, fn)
+        if '*' in path:
+            from glob import glob
+            paths = glob(path)
+        else:
+            paths = [path]
+        for p in paths:
+            if not os.path.exists(p):
+                raise RuntimeError('No such file: ' + p)
+            p = p.replace(basedir, '')
+            if p.startswith('/'):
+                p = p[1:]
+            all_files.append(p)
+    cmd = ['tar', '-c', '-z', '-f', '-'] + all_files
     print('Command:', cmd)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                             shell=False,
