@@ -45,8 +45,10 @@ coadd_version_choices = [
     ('neo5', 'NeoWISE-R 5'),
     ('neo6', 'NeoWISE-R 6'),
     ('neo7', 'NeoWISE-R 7'),
+    ('neo11', 'NeoWISE-R 11'),
     ]
-coadd_version_default = 'neo7'
+#coadd_version_default = 'neo7'
+coadd_version_default = 'neo11'
 
 def check_version(ver):
     okvers = [v for v,_ in coadd_version_choices]
@@ -145,10 +147,17 @@ def tileset_tgz(req):
         return HttpResponse('Too many tiles requested; max %i' % maxtiles,
                             status=413)
 
+    version = req.POST['version']
+    if not check_version(version):
+        return HttpResponse('Invalid version')
+
+    mask_pattern = []
+    if version in ['allwise', 'neo1', 'neo2']:
+        mask_pattern = [('masks',   'mask.tgz')]
+
     pats = []
     prods = []
     for key,pat in [('frames',  'frames.fits'),
-                    ('masks',   'mask.tgz'),
                     ('imgu',    'img-u.fits'),
                     ('stdu',    'std-u.fits.gz'),
                     ('invvaru', 'invvar-u.fits.gz'),
@@ -156,19 +165,22 @@ def tileset_tgz(req):
                     ('imgm',    'img-m.fits'),
                     ('stdm',    'std-m.fits.gz'),
                     ('invvarm', 'invvar-m.fits.gz'),
-                    ('nm',      'n-m.fits.gz'),]:
+                    ('nm',      'n-m.fits.gz'),] + mask_pattern:
         if key in req.POST:
            pats.append(pat)
            prods.append(key)
+
+    # products that are per-tile, not per-band
+    tilepats = []
+    if version in ['neo2', 'neo3', 'neo4', 'neo5', 'neo6', 'neo7', 'neo11']:
+        if 'masks' in req.POST:
+            tilepats.append('msk.fits.gz')
+            prods.append('masks')
 
     bands = []
     for band in [1,2,3,4]:
         if 'w%i' % band in req.POST:
             bands.append(band)
-
-    version = req.POST['version']
-    if not check_version(version):
-        return HttpResponse('Invalid version')
 
     tracking = UserDownload(ip=req.META['REMOTE_ADDR'],
                             products=' '.join(prods),
@@ -179,7 +191,7 @@ def tileset_tgz(req):
                             w4=(4 in bands))
     if dotrack:
         tracking.save()
-    
+
     # print 'Tiles:', tiles
     # print 'Bands:', bands
     # print 'Pats:', pats
@@ -191,6 +203,8 @@ def tileset_tgz(req):
         for band in bands:
             for pat in pats:
                 files.append(str(os.path.join(dirnm, 'unwise-%s-w%i-%s' % (coadd, band, pat))))
+        for pat in tilepats:
+            files.append(str(os.path.join(dirnm, 'unwise-%s-%s' % (coadd, pat))))
     # print 'Files:', files
     return tar_files(req, files, 'unwise.tgz')
 

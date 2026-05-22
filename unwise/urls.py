@@ -5,6 +5,8 @@ import sdssphot.views as phot
 
 tilepattern = r'[0-9]{4}[pm][0-9]{3}'
 
+versions = '(' + '|'.join(['allwise', 'neo1', 'neo2', 'neo3', 'neo4', 'neo5', 'neo6', 'neo7', 'neo11']) + ')'
+
 urlpatterns = [
     # These are redirects for Aaron
     re_path(r'^neo4/?$', co.fulldepth_neo4),
@@ -16,11 +18,12 @@ urlpatterns = [
     re_path(r'^tiles_near/$', co.CoordSearchTileList.as_view()),
 
     # Add new dataset names here!
-    re_path(r'^tiledata/(?P<version>(neo7|neo6|neo5|neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern +
+    re_path(r'^tiledata/(?P<version>' + versions + ')/(?P<coadd>' + tilepattern +
         ')-w(?P<bands>1?2?3?4?).tgz/?$',
         co.tile_tgz, name='tile-tgz'),
 
-    re_path(r'^tiledata/(?P<version>(neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
+    #re_path(r'^tiledata/(?P<version>(neo4|neo3|neo2|neo1|allwise))/(?P<coadd>' + tilepattern + ').tgz/?$',
+    re_path(r'^tiledata/(?P<version>' + versions + ')/(?P<coadd>' + tilepattern + ').tgz/?$',
         co.tile_tgz, name='tile-tgz'),
     re_path(r'^tilesetdata/?$', co.tileset_tgz, name='tileset-tgz'),
     re_path(r'^imgsearch/?$', co.coord_search, name='search'),
